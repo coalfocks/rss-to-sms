@@ -18,8 +18,12 @@ export class RedditFeedJobProvider implements Provider<CronJob> {
       start: true,
       cronTime: `*/${frequency} * * * *`,
       onTick: async () => {
-        const items = await this.rssService.getRedditRss(this.jobConfig.context.url, 30);
-        await this.messageService.mailToNumber(process.env.PHONE_NUMBER || '', process.env.CARRIER || '', process.env.FROM_ADDRESS || '', items);
+        try {
+            const items = await this.rssService.getRedditRss(this.jobConfig.context.url, parseInt(process.env.ITEMS_QUANTITY || '30'));
+            await this.messageService.mailToNumber(process.env.PHONE_NUMBER || '', process.env.CARRIER || '', process.env.FROM_ADDRESS || '', items);
+        } catch (error) {
+            console.error(error);
+        }
       },
       ...this.jobConfig,
     });
