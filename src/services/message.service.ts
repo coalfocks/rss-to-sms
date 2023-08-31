@@ -44,15 +44,15 @@ export class MessageService {
     const subject = 'RSS Feed';
     const body = message;
     const transporter = nodemailer.createTransport({
-        host: 'smtp.mail.yahoo.com',
-        port: 465,
+        // @ts-ignore
+        host: process.env.SMTP_HOST || 'smtp.gmail.com',
+        port: process.env.SMTP_PORT || 465,
         secure: true,
-        service: 'yahoo',
+        service: process.env.MAIL_SERVICE || 'gmail',
         auth: {
             user: fromAddress,
             pass: process.env.GMAIL_PASSWORD,
         },
-        logger: true,
     });
     const mailOptions = {
         from: fromAddress,
